@@ -5,6 +5,9 @@ import org.apache.commons.io.input.BOMInputStream;
 import util.VMGReader;
 
 import java.io.*;
+import java.util.Date;
+import java.util.Map;
+import java.util.Calendar;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,7 +17,7 @@ import java.io.*;
  * To change this template use File | Settings | File Templates.
  */
 public class Main {
-    public static void main(String [] args) throws IOException{
+    public static void main(String[] args) throws IOException {
         final String path = "/home/lester/Downloads/test2.vmg";
 //        FileInputStream stream = new FileInputStream(new File(path));
 //        try {
@@ -53,7 +56,7 @@ public class Main {
             VMG vmg = new VMG();
 
             boolean msgbody = false;
-            while ((strLine = br.readLine()) != null)   {
+            while ((strLine = br.readLine()) != null) {
                 // Print the content on the console
                 String vmgLine = VMGReader.read(strLine);
 
@@ -64,8 +67,7 @@ public class Main {
                 if (msgbody) {
                     if (vmgLine.startsWith("END:VBODY")) {
                         msgbody = false;
-                    }
-                    else {
+                    } else {
                         sms.appendMessageBody(vmgLine);
                     }
                 }
@@ -87,5 +89,40 @@ public class Main {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             return null;
         }
+    }
+
+    public static void generateReport(String sFileName, Map<Date, SMS> smsTreeMap) {
+        try {
+            FileWriter writer = new FileWriter(sFileName + "test.csv");
+
+            for (Map.Entry<Date, SMS> sms : smsTreeMap.entrySet()) {
+
+                // writer.append(sms.getKey().toString());
+                //writer.append(';');
+                writer.append(sms.getValue().getDate().toString());
+                writer.append(';');
+
+                Date date; // your date
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(sms.getValue().getDate());
+                int year = cal.get(Calendar.YEAR);
+
+                writer.append((char) year);
+                writer.append(';');
+
+                writer.append(sms.getValue().getMessageBody());
+                writer.append(';');
+                writer.append(sms.getValue().getNumber());
+
+                writer.append('\n');
+            }
+
+
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

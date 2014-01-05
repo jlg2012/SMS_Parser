@@ -1,4 +1,3 @@
-import groovy.ui.SystemOutputInterceptor
 import Model.SMS
 /**
  * Created with IntelliJ IDEA.
@@ -36,7 +35,7 @@ class MainTest extends GroovyTestCase {
                 smss++;
             }
         }
-        for(Map.Entry<Date, SMS> sms : m) {
+        for (Map.Entry<Date, SMS> sms : m) {
 
             System.out.println(sms.getKey().toString());
             System.out.println(sms.getValue().getMessageBody());
@@ -45,6 +44,8 @@ class MainTest extends GroovyTestCase {
 
         }
 
-        System.out.println("Lastet " + smss + " filer") ;
+        Main.generateReport(PATH, m);
+
+        System.out.println("Lastet " + smss + " filer");
     }
 }

@@ -34,9 +34,7 @@ public class SMS {
     public void appendMessageBody(String vmgLine) {
         if (messageBody == null) {
             messageBody = vmgLine;
-        }
-
-        else {
+        } else {
             messageBody = messageBody + vmgLine;
         }
     }
@@ -45,16 +43,14 @@ public class SMS {
         this.date = date;
     }
 
-    public String getDate() {
+    public Date getDate() {
         String pattern = "dd.MM.yyyy HH:mm:ss";
         Date date;
         try {
             date = new SimpleDateFormat(pattern).parse(this.date.substring(5));
 
-            return date.toString();
-        }
-
-        catch (Exception e) {
+            return date;
+        } catch (Exception e) {
             System.out.println(e.toString());
             return null;
         }
