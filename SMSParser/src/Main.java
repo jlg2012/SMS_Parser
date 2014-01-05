@@ -1,12 +1,10 @@
+import Model.SMS;
+import Model.VMG;
 import org.apache.commons.io.ByteOrderMark;
 import org.apache.commons.io.input.BOMInputStream;
+import util.VMGReader;
 
 import java.io.*;
-import java.nio.MappedByteBuffer;
-import java.nio.channels.FileChannel;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
-import java.nio.charset.CharsetEncoder;
 
 /**
  * Created with IntelliJ IDEA.
@@ -41,7 +39,7 @@ public class Main {
         readFile(path);
     }
 
-    private static void readFile(String path) throws IOException {
+    public static void readFile(String path) throws IOException {
         FileInputStream stream = new FileInputStream(new File(path));
 
 
@@ -50,26 +48,42 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(bom));
         String strLine;
 
-        System.out.println (bom.getBOMCharsetName());
-
-        if (bom.hasBOM()){
-            System.out.println ("TRUE");
-        }
-        else {
-            System.out.println("FALSE");
-        }
-
-
         try {
+            SMS sms = new SMS();
+            VMG vmg = new VMG();
+
+            boolean msgbody = false;
             while ((strLine = br.readLine()) != null)   {
                 // Print the content on the console
-                String[] s = strLine.split("\\u0000E");
-                System.out.println (strLine.replaceAll("\\u0000", ""));
-                System.out.println (s.length);
+                String vmgLine = VMGReader.read(strLine);
+
+                if (vmgLine.startsWith("TEL:")) {
+                    sms.setNumber(vmgLine.substring(vmgLine.lastIndexOf(":") + 1));
+                }
+
+                if (msgbody) {
+                    if (vmgLine.startsWith("END:VBODY")) {
+                        msgbody = false;
+                    }
+                    else {
+                        sms.appendMessageBody(vmgLine);
+                    }
+                }
+
+                if (vmgLine.startsWith("Date:")) {
+                    String msg = vmgLine.substring(vmgLine.lastIndexOf("Date:"));
+//                    msg.substring(0, vmgLine.indexOf("END:VBODY"));
+                    sms.setDate(msg);
+                    msgbody = true;
+                }
             }
+            System.out.println ("Avsender " + sms.getNumber());
+            System.out.println(sms.getDate());
+            System.out.println("Melding " + sms.getMessageBody());
+            System.out.println();
+
         } catch (IOException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
     }
-
 }

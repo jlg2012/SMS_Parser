@@ -7,7 +7,7 @@
  * To change this template use File | Settings | File Templates.
  */
 class MainTest extends GroovyTestCase {
-    private static final String PATH = "../"
+    private static final String PATH = "/Users/lester/Google Drive/Ukesplaner/test/2007-06-11 - SMS mobil"
 
     void setUp() {
 
@@ -22,7 +22,10 @@ class MainTest extends GroovyTestCase {
 
         for (File file : folder.listFiles()) {
             if (file.isFile()) {
-                System.out.println(file.name);
+                //System.out.println(file.name);
+
+                Main.readFile(file.absolutePath);
+                //break
             }
         }
     }
