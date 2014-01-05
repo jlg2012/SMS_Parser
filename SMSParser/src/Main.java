@@ -39,7 +39,7 @@ public class Main {
         readFile(path);
     }
 
-    public static void readFile(String path) throws IOException {
+    public static SMS readFile(String path) throws IOException {
         FileInputStream stream = new FileInputStream(new File(path));
 
 
@@ -77,13 +77,15 @@ public class Main {
                     msgbody = true;
                 }
             }
-            System.out.println ("Avsender " + sms.getNumber());
-            System.out.println(sms.getDate());
-            System.out.println("Melding " + sms.getMessageBody());
-            System.out.println();
+//            System.out.println ("Avsender " + sms.getNumber());
+//            System.out.println(sms.getDate());
+//            System.out.println("Melding " + sms.getMessageBody());
+//            System.out.println();
+            return sms;
 
         } catch (IOException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            return null;
         }
     }
 }

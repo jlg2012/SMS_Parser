@@ -1,4 +1,5 @@
-
+import groovy.ui.SystemOutputInterceptor
+import Model.SMS
 /**
  * Created with IntelliJ IDEA.
  * User: lester
@@ -20,13 +21,30 @@ class MainTest extends GroovyTestCase {
     void testReadFile() {
         File folder = new File(PATH);
 
+        int smss
+        Map<Date, SMS> m = new TreeMap<Date, SMS>();
+
         for (File file : folder.listFiles()) {
             if (file.isFile()) {
                 //System.out.println(file.name);
 
-                Main.readFile(file.absolutePath);
+                SMS sms = Main.readFile(file.absolutePath);
                 //break
+
+                m.put(sms.getDate(), sms);
+
+                smss++;
             }
         }
+        for(Map.Entry<Date, SMS> sms : m) {
+
+            System.out.println(sms.getKey().toString());
+            System.out.println(sms.getValue().getMessageBody());
+            System.out.println(sms.getValue().getNumber());
+            System.out.println();
+
+        }
+
+        System.out.println("Lastet " + smss + " filer") ;
     }
 }
